@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Clinic Appointment System</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Smart Clinic Appointment System</h1>
+      </header>
+
+      <section id="login-section" class="card">
+        <h2>Login</h2>
+        <form id="login-form" class="grid">
+          <label>
+            Username
+            <input id="username" type="text" required maxlength="30" placeholder="Enter your username" />
+          </label>
+          <label>
+            Role
+            <select id="role">
+              <option value="patient">Patient</option>
+              <option value="receptionist">Receptionist</option>
+              <option value="doctor">Doctor (view only)</option>
+            </select>
+          </label>
+          <button type="submit">Continue</button>
+        </form>
+      </section>
+
+      <section id="app-section" class="hidden">
+        <div class="toolbar card">
+          <div>
+            <p>Welcome, <strong id="logged-user"></strong></p>
+            <p id="logged-role"></p>
+          </div>
+          <button id="logout-btn" type="button">Logout</button>
+        </div>
+
+        <section class="card">
+          <h2>Dashboard</h2>
+          <div class="stats" id="stats"></div>
+        </section>
+
+        <section id="form-section" class="card">
+          <h2 id="form-title">Book Appointment</h2>
+          <form id="appointment-form" class="grid">
+            <input id="appointment-id" type="hidden" />
+            <label>
+              Patient Name
+              <input id="patientName" type="text" required maxlength="60" />
+            </label>
+            <label>
+              Phone Number
+              <input id="phone" type="tel" required pattern="[0-9+\-()\s]{8,20}" />
+            </label>
+            <label>
+              Doctor
+              <select id="doctor" required>
+                <option value="">Select doctor</option>
+                <option>Dr. Ahmed</option>
+                <option>Dr. Sara</option>
+                <option>Dr. Lina</option>
+              </select>
+            </label>
+            <label>
+              Date
+              <input id="date" type="date" required />
+            </label>
+            <label>
+              Time
+              <input id="time" type="time" required />
+            </label>
+            <div class="actions">
+              <button type="submit" id="save-btn">Save Appointment</button>
+              <button type="button" id="cancel-edit-btn" class="secondary hidden">Cancel Edit</button>
+            </div>
+          </form>
+          <p id="message" class="message" aria-live="polite"></p>
+        </section>
+
+        <section class="card">
+          <h2>Appointments</h2>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Phone</th>
+                  <th>Doctor</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="appointments-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
