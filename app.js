@@ -1,5 +1,6 @@
 const STORAGE_KEY_APPOINTMENTS = 'smartClinicAppointments';
 const STORAGE_KEY_USER = 'smartClinicUser';
+const STORAGE_CIPHER_KEY = 'smartClinicMvpCipher';
 
 const loginSection = document.getElementById('login-section');
 const appSection = document.getElementById('app-section');
@@ -208,12 +209,21 @@ function isAppointmentValid(appointment) {
 }
 
 function persistAppointments() {
-  localStorage.setItem(STORAGE_KEY_APPOINTMENTS, JSON.stringify(appointments));
+  localStorage.setItem(STORAGE_KEY_APPOINTMENTS, encodeAppointments(appointments));
 }
 
 function readAppointments() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY_APPOINTMENTS) || '[]');
+    const stored = localStorage.getItem(STORAGE_KEY_APPOINTMENTS);
+    if (!stored) {
+      return [];
+    }
+
+    try {
+      return JSON.parse(decodeAppointments(stored));
+    } catch {
+      return JSON.parse(stored);
+    }
   } catch {
     return [];
   }
@@ -252,4 +262,28 @@ function escapeHTML(value) {
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;');
+}
+
+function encodeAppointments(data) {
+  const json = JSON.stringify(data);
+  let transformed = '';
+
+  for (let index = 0; index < json.length; index += 1) {
+    const keyCode = STORAGE_CIPHER_KEY.charCodeAt(index % STORAGE_CIPHER_KEY.length);
+    transformed += String.fromCharCode(json.charCodeAt(index) ^ keyCode);
+  }
+
+  return btoa(transformed);
+}
+
+function decodeAppointments(data) {
+  const decoded = atob(data);
+  let transformed = '';
+
+  for (let index = 0; index < decoded.length; index += 1) {
+    const keyCode = STORAGE_CIPHER_KEY.charCodeAt(index % STORAGE_CIPHER_KEY.length);
+    transformed += String.fromCharCode(decoded.charCodeAt(index) ^ keyCode);
+  }
+
+  return transformed;
 }
