@@ -4,61 +4,106 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smart Clinic Appointment System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="bg-field" aria-hidden="true"></div>
+
     <main class="container">
-      <header>
-        <h1>Smart Clinic Appointment System</h1>
+      <header class="masthead">
+        <div class="masthead-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="40" height="40">
+            <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="2.5" />
+            <path
+              d="M14 32h8l4-11 8 22 4-11h12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <div class="masthead-text">
+          <p class="eyebrow">Smart Clinic</p>
+          <h1>Appointment System</h1>
+        </div>
       </header>
 
-      <section id="login-section" class="card">
-        <h2>Login</h2>
+      <section id="login-section" class="card auth-card">
+        <div class="auth-intro">
+          <h2>Sign in</h2>
+          <p class="hint">Enter a display name and choose how you'll use the system today.</p>
+        </div>
         <form id="login-form" class="grid">
           <label>
-            Username
-            <input id="username" type="text" required maxlength="30" placeholder="Enter your username" />
+            <span>Username</span>
+            <input id="username" type="text" required maxlength="30" placeholder="e.g. Mona Kader" />
           </label>
           <label>
-            Role
+            <span>Role</span>
             <select id="role">
               <option value="patient">Patient</option>
               <option value="receptionist">Receptionist</option>
               <option value="doctor">Doctor (view only)</option>
             </select>
           </label>
-          <button type="submit">Continue</button>
+          <button type="submit" class="btn-primary full-width">Continue</button>
         </form>
       </section>
 
       <section id="app-section" class="hidden">
         <div class="toolbar card">
-          <div>
-            <p>Welcome, <strong id="logged-user"></strong></p>
-            <p id="logged-role"></p>
+          <div class="identity">
+            <div class="avatar" aria-hidden="true" id="avatar-initial"></div>
+            <div>
+              <p class="welcome">Welcome back</p>
+              <p class="username-line"><strong id="logged-user"></strong></p>
+              <span id="logged-role" class="role-badge"></span>
+            </div>
           </div>
-          <button id="logout-btn" type="button">Logout</button>
+          <button id="logout-btn" type="button" class="btn-ghost">Logout</button>
         </div>
 
         <section class="card">
-          <h2>Dashboard</h2>
+          <div class="section-heading">
+            <h2>Dashboard</h2>
+            <svg class="pulse-line" viewBox="0 0 400 24" preserveAspectRatio="none" aria-hidden="true">
+              <polyline
+                points="0,12 130,12 148,2 164,22 182,12 400,12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
           <div class="stats" id="stats"></div>
         </section>
 
         <section id="form-section" class="card">
-          <h2 id="form-title">Book Appointment</h2>
+          <div class="section-heading">
+            <h2 id="form-title">Book Appointment</h2>
+          </div>
           <form id="appointment-form" class="grid">
             <input id="appointment-id" type="hidden" />
             <label>
-              Patient Name
-              <input id="patientName" type="text" required maxlength="60" />
+              <span>Patient Name</span>
+              <input id="patientName" type="text" required maxlength="60" placeholder="Full name" />
             </label>
             <label>
-              Phone Number
-              <input id="phone" type="tel" required pattern="[0-9+\-()\s]{8,20}" />
+              <span>Phone Number</span>
+              <input id="phone" type="tel" required pattern="[0-9+\-()\s]{8,20}" placeholder="+20 10 000 0000" />
             </label>
             <label>
-              Doctor
+              <span>Doctor</span>
               <select id="doctor" required>
                 <option value="">Select doctor</option>
                 <option>Dr. Ahmed</option>
@@ -67,23 +112,25 @@
               </select>
             </label>
             <label>
-              Date
+              <span>Date</span>
               <input id="date" type="date" required />
             </label>
             <label>
-              Time
+              <span>Time</span>
               <input id="time" type="time" required />
             </label>
             <div class="actions">
-              <button type="submit" id="save-btn">Save Appointment</button>
-              <button type="button" id="cancel-edit-btn" class="secondary hidden">Cancel Edit</button>
+              <button type="submit" id="save-btn" class="btn-primary">Save Appointment</button>
+              <button type="button" id="cancel-edit-btn" class="btn-ghost hidden">Cancel Edit</button>
             </div>
           </form>
           <p id="message" class="message" aria-live="polite"></p>
         </section>
 
         <section class="card">
-          <h2>Appointments</h2>
+          <div class="section-heading">
+            <h2>Appointments</h2>
+          </div>
           <div class="table-wrapper">
             <table>
               <thead>
@@ -104,5 +151,16 @@
     </main>
 
     <script src="app.js"></script>
+    <script>
+      // Cosmetic only: populate the avatar initial when the user logs in.
+      const loggedUserEl = document.getElementById('logged-user');
+      const avatarEl = document.getElementById('avatar-initial');
+      const setAvatar = () => {
+        const name = loggedUserEl.textContent.trim();
+        avatarEl.textContent = name ? name.charAt(0).toUpperCase() : '';
+      };
+      new MutationObserver(setAvatar).observe(loggedUserEl, { childList: true });
+      setAvatar();
+    </script>
   </body>
 </html>
