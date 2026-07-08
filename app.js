@@ -31,7 +31,10 @@ function initialize() {
   loginForm.addEventListener('submit', onLogin);
   logoutBtn.addEventListener('click', onLogout);
   appointmentForm.addEventListener('submit', onSaveAppointment);
-  cancelEditBtn.addEventListener('click', resetForm);
+cancelEditBtn.addEventListener('click', () => {
+  resetForm();
+  showMessage('Edit canceled.');
+});
   appointmentsBody.addEventListener('click', onTableAction);
 
   render();
@@ -202,10 +205,15 @@ function isDuplicateSlot(appointment) {
 }
 
 function isAppointmentValid(appointment) {
-  const phoneOk = /^[0-9+\-()\s]{8,20}$/.test(appointment.phone);
+  const phoneOk = isValidPhone(appointment.phone);
   return (
     appointment.patientName && appointment.phone && appointment.doctor && appointment.date && appointment.time && phoneOk
   );
+}
+
+function isValidPhone(phone) {
+  const digitsOnly = phone.replace(/[\s\-()]/g, '');
+  return /^\+?[0-9]{7,15}$/.test(digitsOnly);
 }
 
 function persistAppointments() {
