@@ -31,10 +31,10 @@ function initialize() {
   loginForm.addEventListener('submit', onLogin);
   logoutBtn.addEventListener('click', onLogout);
   appointmentForm.addEventListener('submit', onSaveAppointment);
-cancelEditBtn.addEventListener('click', () => {
-  resetForm();
-  showMessage('Edit canceled.');
-});
+  cancelEditBtn.addEventListener('click', () => {
+    resetForm();
+    showMessage('Edit canceled.');
+  });
   appointmentsBody.addEventListener('click', onTableAction);
 
   render();
@@ -197,7 +197,7 @@ function resetForm() {
 function isDuplicateSlot(appointment) {
   return appointments.some(
     (item) =>
-      item.id !== appointment.id &&
+
       item.doctor === appointment.doctor &&
       item.date === appointment.date &&
       item.time === appointment.time,
